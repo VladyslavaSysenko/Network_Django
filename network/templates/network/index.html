@@ -1,0 +1,92 @@
+{% extends "network/layout.html" %}
+{% load templatetag %}
+{% load static %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
+    <script> var userpage = "{{userpage.username}}"</script>
+
+{% endblock %}
+
+{% block body %}
+    {% if userpage %}
+        <!-- user information -->
+        <div id="user_info">
+            <div id="userpage_userpage">{{userpage.username}}</div>
+            <div id="follow_info">
+                <div>followers <span id="followers_info"></span></div>
+                <div>following <span id="following_info"></span></div>    
+            </div>
+            <!-- follow button -->
+            {% if user.is_authenticated and user.username != userpage.username %}
+                <div><button class="btn btn-warning" id="follow_btn"></button></div>
+            {% endif %}
+        </div>
+    {% endif %}
+        
+
+    <!-- posts -->
+    {% for post in posts %}
+        <div class="post" id='post_{{post.id}}'>
+            <div class="username"><a href="{% url 'user_page' post.user 1 %}">{{post.user}}</a></div>
+            <div class="text"><span class="textarea" role="textbox">{{post.text}}</span></div>
+            <div>
+                <div class="heart_div"><span class="heart"></span></div>
+                <div class="datetime">{{post.date_time | local_time}}</div>
+                <div class="edit_div">
+                    {% if post.user == user %}
+                        <a class="edit_btn">Edit</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+    {% endfor %}
+
+    {% if posts.has_previous or posts.has_next %}
+        <!-- pagination -->
+        <div id="pagination">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!--active previous, first -->
+                    {% if posts.has_previous %}
+                        <li class="page-item"><a class="page-link" href="{{request.path|slices:posts.number}}/1">First</a></li>
+                        <li class="page-item"><a class="page-link" href="{{request.path|slices:posts.number}}/{{posts.previous_page_number}}">Previous</a></li>
+                    {% else %}
+                    <!--disabled previous, first -->
+                        <li class="page-item disabled"><a class="page-link" tabindex="-1">First</a></li>
+                        <li class="page-item disabled"><a class="page-link" tabindex="-1">Previous</a></li>
+                    {% endif %}
+
+                    <!-- pages -->
+                    {% for page_number in posts.adjusted_elided_pages %}
+                        {% if page_number == posts.paginator.ELLIPSIS %}
+                            <li class="page-item"><a class="page-link">{{page_number}}</a></li>
+                        {% else %}
+                            <li class="page-item {% if page_number == posts.number %}active{% endif %}"><a class="page-link" href="{{request.path|slices:posts.number}}/{{page_number}}">{{page_number}}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <!-- active next, last -->
+                    {% if posts.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{request.path|slices:posts.number}}/{{posts.next_page_number}}">Next</a></li>
+                        <li class="page-item"><a class="page-link" href="{{request.path|slices:posts.number}}/{{posts.paginator.num_pages}}">Last</a></li>
+                    {% else %}
+                    <!-- disabled next, last -->
+                        <li class="page-item disabled"><a class="page-link" tabindex="-1">Next</a></li>
+                        <li class="page-item disabled"><a class="page-link" tabindex="-1">Last</a></li>
+                    {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    {% else %}
+        {% if posts.paginator.count == 0 %}
+
+        <div id="nothing_here">
+            <h2>Nothing here yet</h2>
+            <img src="https://cliply.co/wp-content/uploads/2021/09/142109670_SAD_CAT_400.gif">
+        </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

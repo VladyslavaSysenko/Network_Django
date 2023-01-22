@@ -1,0 +1,170 @@
+.body{
+    padding: 20px;
+    background-color: rgb(254, 239, 217);
+    height: 100%;
+}
+ html{
+    background-color: rgb(254, 239, 217);
+ }
+
+/* HAVBAR */
+
+.active_nav {
+  border-radius: 10px;
+  border: 2px dashed rgb(101, 101, 101);
+}
+
+/* New Post Modal */
+.modal-content {
+  background-color: rgb(170, 238, 255)!important;
+}
+
+.modal-header {
+  border-bottom: 1px solid #6e50da!important;
+}
+
+.modal {
+  top: 18%!important;
+}
+
+#text_new_post {
+  min-height: 150px!important;
+  max-height: 300px!important;
+  overflow:auto!important;
+}
+
+#btn_new_post {
+  float: right;
+  font-size: large;
+}
+
+/* POST */
+.post{
+    border: 2px solid rgb(135, 249, 249);
+    padding: 10px 30px;
+    width: 60%;
+    margin: 10px auto;
+    border-radius: 10px;
+}
+
+.post .username a {
+  color:rgb(168, 27, 181);
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.post .datetime {
+  color: gray;
+  width: 20%;
+  float: left;
+}
+
+.post .heart_div {
+  width: 43%;
+  float: left;
+  position: relative;
+  top: -10px;
+}
+
+.post .edit_div {
+  width: 10%;
+  margin-left: 96%;
+  height: 20px;
+}
+
+.post .edit_div a {
+  color:rgb(252, 137, 248);
+}
+
+.post .edit_div a:hover {
+  color:rgb(232, 18, 225);
+}
+
+.post .text .textarea, #text_new_post {
+    margin: 0.4em 0;
+    white-space: pre-wrap;
+    width: 100%;
+    background-color: rgb(254, 246, 235);
+    border: none;
+    display: block;
+    overflow: hidden;
+    min-height: 30px;
+    line-height: 20px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.post .text .textarea:focus, #text_new_post:focus {
+  outline:none;
+}
+
+.post .text .textarea[contenteditable] {
+  background-color: rgb(247, 218, 178);
+}
+
+
+
+/* LIKE */
+.heart::before {
+    content: '\2665';
+    top:3px;
+    position: relative;
+    font-size: 1.5em;
+    margin:0 2px;
+  }
+
+  .heart_liked::before {
+    color: red;
+  }
+
+.heart_unliked::before {
+    color: grey;
+}
+
+
+/* PAGINATOR */
+#pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* USERPAGE AND FOLLOWERS*/
+#userpage_userpage {
+  color:rgb(255, 145, 61);
+  font-size: 2.5em;
+  font-weight: 600;
+  float: left;
+}
+
+#user_info {
+  width: 60%;
+  align-items: center;
+  display:flex;
+  margin: auto;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+#follow_info {
+  color:rgb(250, 155, 82);
+  font-size: 1.3em;
+}
+
+#follow_info div{
+  float: left;
+  margin-left: 50px;
+}
+
+#follow_btn {
+  padding: 6px 6px;
+  width: 80px;
+}
+
+
+/* Nothing here */
+#nothing_here{
+  margin-top: 7%;
+  text-align: center;
+}
+
