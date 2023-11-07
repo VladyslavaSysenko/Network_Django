@@ -10,10 +10,12 @@ import json
 from .models import User, Post, Like, Following
 
 
+# Start
 def start(request):
     return HttpResponseRedirect(reverse("index", kwargs={'page':1}))
 
 
+# Login
 def login_view(request):
     if request.method == "POST":
         # Attempt to sign user in
@@ -32,11 +34,13 @@ def login_view(request):
         return render(request, "network/login.html")
 
 
+# Logout
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index", kwargs={'page':1}))
 
 
+# Register
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -62,15 +66,17 @@ def register(request):
         return render(request, "network/register.html")
 
 
+# Paginator
 def paginator(posts, page):
-    # paginate posts
+    # Paginate posts
     paginator = Paginator(posts, per_page=10)
-    # choose needed posts for page
+    # Choose needed posts for page
     page_object = paginator.get_page(page)
     page_object.adjusted_elided_pages = paginator.get_elided_page_range(page, on_each_side=1, on_ends=0)
     return page_object
 
 
+# Index page
 def index(request, page):
     posts = Post.objects.all().order_by("-id")
     return render(request, "network/index.html",{
@@ -79,10 +85,11 @@ def index(request, page):
     })
 
 
+# New post
 @login_required
 def new_post(request):
     if request.method == "PUT":
-        #check if not empty
+        # Check if not empty
         text = json.loads(request.body).get("text")
         if text != "":
             # Make new post
@@ -96,6 +103,7 @@ def new_post(request):
             return JsonResponse({"success": "no"})
 
 
+# Following posts
 @login_required
 def following_posts(request, page):
     # Open page with posts of following accounts
@@ -108,8 +116,9 @@ def following_posts(request, page):
     })
 
 
+# User page
 def user_page(request, username, page):
-    # follow or unfollow
+    # Follow or unfollow
     if request.method == "PUT":
         user = User.objects.get(id=request.user.id)
         userpage = User.objects.get(username=username)
@@ -130,8 +139,8 @@ def user_page(request, username, page):
         })
 
 
+# Return info about followers and followings 
 def follow_info(request, username):
-    # Return info about followers and followings 
     if request.method == "PUT":
         user = request.user
         userpage = User.objects.get(username=username)
@@ -145,8 +154,8 @@ def follow_info(request, username):
             "un_followed":un_followed})
 
 
+# Like or unlike
 def like(request, post_id):
-    # Like or unlike
     if request.method == "PUT":
         user = User.objects.get(id=request.user.id)
         # Unlike
@@ -158,8 +167,8 @@ def like(request, post_id):
         return JsonResponse({"success": "yes"})
 
 
+# Return info about likes
 def like_info(request, post_id):
-    # Return info about likes
     if request.method == "PUT":
         try:
             user = User.objects.get(id=request.user.id)
@@ -171,8 +180,8 @@ def like_info(request, post_id):
                 "amount_likes":Like.objects.filter(post__id=post_id).count()})
 
 
+# Edit post
 def edit(request, post_id):
-    # edit post
     post = Post.objects.get(id=post_id)
     if request.user == post.user:
         if request.method == "PUT":
@@ -181,5 +190,3 @@ def edit(request, post_id):
             post.text = text
             post.save()
             return JsonResponse({"success": "yes"})
-
-
