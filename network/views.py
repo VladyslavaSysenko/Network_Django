@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ from .models import User, Post, Like, Following
 
 # Start
 def start(request):
-    return HttpResponseRedirect(reverse("index", kwargs={'page':1}))
+    return HttpResponseRedirect(reverse("index", kwargs={"page": 1}))
 
 
 # Login
@@ -25,11 +25,11 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index", kwargs={'page':1}))
+            return HttpResponseRedirect(reverse("index", kwargs={"page": 1}))
         else:
-            return render(request, "network/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            return render(
+                request, "network/login.html", {"message": "Invalid username and/or password."}
+            )
     else:
         return render(request, "network/login.html")
 
@@ -37,7 +37,7 @@ def login_view(request):
 # Logout
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index", kwargs={'page':1}))
+    return HttpResponseRedirect(reverse("index", kwargs={"page": 1}))
 
 
 # Register
@@ -45,23 +45,28 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
+        # Ensure username ans password are not empty
+        if not username:
+            return render(
+                request, "network/register.html", {"message": "Username cannot be empty!"}
+            )
+        if not password:
+            return render(
+                request, "network/register.html", {"message": "Password cannot be empty!"}
+            )
+        # Ensure password matches confirmation
         if password != confirmation:
-            return render(request, "network/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(request, "network/register.html", {"message": "Passwords must match."})
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "network/register.html", {
-                "message": "Username already taken."
-            })
+            return render(request, "network/register.html", {"message": "Username already taken."})
         login(request, user)
-        return HttpResponseRedirect(reverse("index", kwargs={'page':1}))
+        return HttpResponseRedirect(reverse("index", kwargs={"page": 1}))
     else:
         return render(request, "network/register.html")
 
@@ -72,17 +77,16 @@ def paginator(posts, page):
     paginator = Paginator(posts, per_page=10)
     # Choose needed posts for page
     page_object = paginator.get_page(page)
-    page_object.adjusted_elided_pages = paginator.get_elided_page_range(page, on_each_side=1, on_ends=0)
+    page_object.adjusted_elided_pages = paginator.get_elided_page_range(
+        page, on_each_side=1, on_ends=0
+    )
     return page_object
 
 
 # Index page
 def index(request, page):
     posts = Post.objects.all().order_by("-id")
-    return render(request, "network/index.html",{
-        "posts": paginator(posts, page),
-        "way": "index"
-    })
+    return render(request, "network/index.html", {"posts": paginator(posts, page), "way": "index"})
 
 
 # New post
@@ -93,10 +97,7 @@ def new_post(request):
         text = json.loads(request.body).get("text")
         if text != "":
             # Make new post
-            new = Post(
-                user = request.user,
-                text = text
-            )
+            new = Post(user=request.user, text=text)
             new.save()
             return JsonResponse({"success": "yes"})
         else:
@@ -108,12 +109,11 @@ def new_post(request):
 def following_posts(request, page):
     # Open page with posts of following accounts
     user = User.objects.get(id=request.user.id)
-    following = list(user.following.values_list('following', flat=True))
-    posts = Post.objects.filter( user__in = following).order_by("-id")
-    return render(request, "network/index.html",{
-        "posts": paginator(posts, page),
-        "way": "following_posts"
-    })
+    following = list(user.following.values_list("following", flat=True))
+    posts = Post.objects.filter(user__in=following).order_by("-id")
+    return render(
+        request, "network/index.html", {"posts": paginator(posts, page), "way": "following_posts"}
+    )
 
 
 # User page
@@ -131,15 +131,19 @@ def user_page(request, username, page):
         return JsonResponse({"success": "yes"})
     # Open user page
     else:
-        posts = Post.objects.filter(user = User.objects.get(username=username)).order_by("-id")
-        return render(request, "network/index.html",{
-            "userpage":User.objects.get(username=username),
-            "posts": paginator(posts, page),
-            "way": "user_page"
-        })
+        posts = Post.objects.filter(user=User.objects.get(username=username)).order_by("-id")
+        return render(
+            request,
+            "network/index.html",
+            {
+                "userpage": User.objects.get(username=username),
+                "posts": paginator(posts, page),
+                "way": "user_page",
+            },
+        )
 
 
-# Return info about followers and followings 
+# Return info about followers and followings
 def follow_info(request, username):
     if request.method == "PUT":
         user = request.user
@@ -148,10 +152,13 @@ def follow_info(request, username):
             un_followed = user.following.filter(following=userpage).count()
         else:
             un_followed = "anonymous"
-        return JsonResponse({
-            "followers":userpage.followers.count(),
-            "following":userpage.following.count(),
-            "un_followed":un_followed})
+        return JsonResponse(
+            {
+                "followers": userpage.followers.count(),
+                "following": userpage.following.count(),
+                "un_followed": un_followed,
+            }
+        )
 
 
 # Like or unlike
@@ -172,12 +179,14 @@ def like_info(request, post_id):
     if request.method == "PUT":
         try:
             user = User.objects.get(id=request.user.id)
-            return JsonResponse({
-                "amount_likes":Like.objects.filter(post__id=post_id).count(),
-                "un_liked":Like.objects.filter(user=user, post__id=post_id).count()})
+            return JsonResponse(
+                {
+                    "amount_likes": Like.objects.filter(post__id=post_id).count(),
+                    "un_liked": Like.objects.filter(user=user, post__id=post_id).count(),
+                }
+            )
         except User.DoesNotExist:
-            return JsonResponse({
-                "amount_likes":Like.objects.filter(post__id=post_id).count()})
+            return JsonResponse({"amount_likes": Like.objects.filter(post__id=post_id).count()})
 
 
 # Edit post

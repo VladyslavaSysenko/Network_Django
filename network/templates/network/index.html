@@ -29,15 +29,15 @@
     {% for post in posts %}
         <div class="post" id='post_{{post.id}}'>
             <div class="username"><a href="{% url 'user_page' post.user 1 %}">{{post.user}}</a></div>
+            <div class="heart_div"><span class="heart"></span></div>
             <div class="text"><span class="textarea" role="textbox">{{post.text}}</span></div>
-            <div>
-                <div class="heart_div"><span class="heart"></span></div>
-                <div class="datetime">{{post.date_time | local_time}}</div>
+            <div class="end">
                 <div class="edit_div">
                     {% if post.user == user %}
                         <a class="edit_btn">Edit</a>
                     {% endif %}
                 </div>
+                <div class="datetime">{{post.date_time | local_time}}</div>
             </div>
             
         </div>
@@ -85,7 +85,7 @@
 
         <div id="nothing_here">
             <h2>Nothing here yet</h2>
-            <img src="https://cliply.co/wp-content/uploads/2021/09/142109670_SAD_CAT_400.gif">
+            <img src="/static/network/images/SAD_CAT.gif">
         </div>
         {% endif %}
     {% endif %}

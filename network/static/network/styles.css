@@ -2,6 +2,7 @@
     padding: 20px;
     background-color: rgb(254, 239, 217);
     height: 100%;
+    font-weight: 500;
 }
  html{
     background-color: rgb(254, 239, 217);
@@ -16,7 +17,7 @@
 
 /* New Post Modal */
 .modal-content {
-  background-color: rgb(170, 238, 255)!important;
+  background-color: rgb(159 219 233)!important;
 }
 
 .modal-header {
@@ -27,6 +28,10 @@
   top: 18%!important;
 }
 
+.nav-link:hover {
+  cursor: pointer;
+}
+
 #text_new_post {
   min-height: 150px!important;
   max-height: 300px!important;
@@ -35,49 +40,64 @@
 
 #btn_new_post {
   float: right;
-  font-size: large;
+  width: 90px;
 }
 
 /* POST */
 .post{
-    border: 2px solid rgb(135, 249, 249);
+    border: 3px solid rgba(0, 0, 255, .2);
+    box-shadow: 4px 3px 1px 2px rgba(0, 0, 255, .2);
     padding: 10px 30px;
     width: 60%;
     margin: 10px auto;
     border-radius: 10px;
+    background-color: rgb(255, 233, 200);
 }
 
 .post .username a {
-  color:rgb(168, 27, 181);
+  color:rgb(179, 80, 5);
   font-size: 1.3em;
   font-weight: 600;
+  text-decoration: none;
 }
+
+.post .username a:hover {
+  text-decoration: underline;
+}
+
+.post .username {
+  float: left;
+}
+
 
 .post .datetime {
   color: gray;
-  width: 20%;
-  float: left;
+  float: right;
+  font-size: smaller;
 }
 
 .post .heart_div {
-  width: 43%;
-  float: left;
   position: relative;
-  top: -10px;
+  top: -5px;
+  float: right;
 }
 
 .post .edit_div {
-  width: 10%;
-  margin-left: 96%;
-  height: 20px;
+  float: left;
+}
+
+.post .end {
+  height: 1.2em;
 }
 
 .post .edit_div a {
-  color:rgb(252, 137, 248);
+  padding-left: 5px;
+  color:rgba(97, 65, 10, 0.605);
 }
 
 .post .edit_div a:hover {
-  color:rgb(232, 18, 225);
+  color:rgba(97, 65, 10);
+  cursor: pointer;
 }
 
 .post .text .textarea, #text_new_post {
@@ -90,7 +110,7 @@
     overflow: hidden;
     min-height: 30px;
     line-height: 20px;
-    padding: 5px;
+    padding: 7px;
     border-radius: 5px;
 }
 
@@ -129,9 +149,28 @@
   margin-top: 20px;
 }
 
+.page-link {
+    color: #e8e7e7 !important;
+    background-color: #4f4f4f !important;
+    border: 1px solid #262626 !important;
+}
+.page-link:hover {
+        color: #fff !important;
+        background-color: #9f67b9 !important;
+}
+.page-item.active .page-link {
+    background-color: #4f075e !important;
+}
+
+.disabled .page-link {
+  color: #8e8d8d !important;
+}
+
+
+
 /* USERPAGE AND FOLLOWERS*/
 #userpage_userpage {
-  color:rgb(255, 145, 61);
+  color:rgb(69, 46, 30);
   font-size: 2.5em;
   font-weight: 600;
   float: left;
@@ -147,8 +186,11 @@
 }
 
 #follow_info {
-  color:rgb(250, 155, 82);
+  color:rgb(69, 46, 30);
   font-size: 1.3em;
+  height: 2.3em;
+  display: flex;
+  align-items: flex-end;
 }
 
 #follow_info div{
@@ -168,3 +210,37 @@
   text-align: center;
 }
 
+
+
+/* Login and Register */
+.container-login {
+    width: 60%;
+    margin: auto;
+    padding-top: 7%;
+}
+
+.container-login .btn{
+    width: 120px;
+    margin: 0 10px;
+}
+
+.login-end {
+    margin-top: 10%;
+}
+
+.div-error {
+    color: rgb(254, 239, 217);
+    font-size: 2em;
+    animation: error 2s ease-in 1;
+}
+
+@keyframes error
+{
+    from {color:rgb(187, 0, 25)}
+    to {color: rgb(254, 239, 217)}
+}
+
+.center {
+    display: flex;
+    justify-content:space-evenly;
+}
