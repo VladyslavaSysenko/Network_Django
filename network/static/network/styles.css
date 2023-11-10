@@ -10,6 +10,10 @@
 
 /* HAVBAR */
 
+.navbar {
+  height: 3.7em;
+}
+
 .active_nav {
   border-radius: 10px;
   border: 2px dashed rgb(101, 101, 101);
